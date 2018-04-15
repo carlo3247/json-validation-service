@@ -1,12 +1,22 @@
 package com.winkelhake.carlo.app
 
-object SchemaManager {
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.io._
+
+object SchemaManager {  
   
-  def saveSchema(jsonString: String) = {
-    
+  private val PATH = "src/main/resources/schemas/"
+  private lazy val mapper = new ObjectMapper()
+
+  def saveSchema(id: String, jsonString: String) = {
+    try {
+      mapper.writeValue(new File(PATH + id + ".json"), jsonString)
+    } catch {
+      case e: Exception => println(e)
+    }
   }
   
-  def getSchema() = {
-    
+  def getSchema(id: Int): Option[String] = {
+    None
   }
 }

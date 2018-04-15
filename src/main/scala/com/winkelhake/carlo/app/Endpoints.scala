@@ -18,13 +18,19 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   // Download a JSON Schema with unique `SCHEMAID`
   get("/schema/:id") {
     println("test")
+    test("hello")
   }
   
   // Upload a JSON Schema with unique `SCHEMAID`
+  // Does not check for existing schema
   post("/schema/:id") {
     val jsonString = request.body
+    if (validJsonString(jsonString)) {
+      saveSchema(params("id"), jsonString) 
+    }
     
-    parseJsonString(jsonString)
+//    val jsonString = request.body
+//    parseJsonString(jsonString)
   }
   
   // Validate a JSON document against the JSON Schema identified by `SCHEMAID`
