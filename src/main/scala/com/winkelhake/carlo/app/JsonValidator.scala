@@ -1,7 +1,13 @@
 package com.winkelhake.carlo.app
 
-import org.scalatra._
-
 object JsonValidator {
+  
+  def validateJsonString() = {
+    
+  }
+  
+  def validateSchema() = {
+    
+  }
   
 }

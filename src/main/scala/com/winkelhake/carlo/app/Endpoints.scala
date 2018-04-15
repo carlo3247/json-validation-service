@@ -5,7 +5,7 @@ import org.scalatra.json._
 import org.scalatra._
 import JsonValidator._
 
-class MyScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
+class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   
   protected implicit lazy val jsonFormats: Formats = DefaultFormats
   
