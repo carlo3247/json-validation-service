@@ -4,6 +4,7 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.scalatra._
 import JsonValidator._
+import SchemaManager._
 
 class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   
@@ -16,14 +17,14 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
 
   // Download a JSON Schema with unique `SCHEMAID`
   get("/schema/:id") {
-    List("test")
+    println("test")
   }
   
   // Upload a JSON Schema with unique `SCHEMAID`
   post("/schema/:id") {
     val jsonString = request.body
     
-    jsonString
+    parseJsonString(jsonString)
   }
   
   // Validate a JSON document against the JSON Schema identified by `SCHEMAID`
