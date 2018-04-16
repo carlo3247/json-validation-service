@@ -5,6 +5,7 @@ import org.scalatra.json._
 import org.scalatra._
 import JsonValidator._
 import SchemaManager._
+import JsonParser._
 
 class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   
@@ -17,24 +18,28 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
 
   // Download a JSON Schema with unique `SCHEMAID`
   get("/schema/:id") {
-    println("test")
-    test("hello")
+    getSchema(params("id")).getOrElse(createResponseJson("1", "2", "3"))
   }
   
   // Upload a JSON Schema with unique `SCHEMAID`
   // Does not check for existing schema
   post("/schema/:id") {
     val jsonString = request.body
-    if (validJsonString(jsonString)) {
+    if (validJsonFormat(jsonString)) {
       saveSchema(params("id"), jsonString) 
+      createResponseJson("1", "2", "3")
+    } else {
+      createResponseJson("1", "2", "3")
     }
-    
-//    val jsonString = request.body
-//    parseJsonString(jsonString)
   }
   
   // Validate a JSON document against the JSON Schema identified by `SCHEMAID`
   post("/validate/:id") {
-    List("test")
+    val schemaString = getSchema(params("id"))
+    if (!schemaString.isEmpty) {
+      validateJsonString(request.body, schemaString.get)
+    } else {
+      createResponseJson("1", "2", "3")
+    }
   }
 }

@@ -1,71 +1,35 @@
 package com.winkelhake.carlo.app
 
-import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import com.fasterxml.jackson.databind.{JsonNode}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 
+import JsonParser._
 
 object JsonValidator {
- 
-  private lazy val mapper = new ObjectMapper()
+
   private lazy val jsonSchemaFactory = JsonSchemaFactory.byDefault
   
-  def validateJsonStringAgainstSchemaString(schemaString: String, jsonString: String) = {
-//    
-//    val schema =  jsonSchemaFactory.getJsonSchema(parseJsonString(schemaString))
-//    val json =  parseJsonString(jsonString)
-//    
-//    val report = schema.validate(json)
-//    println(report.isSuccess)
-//    println(report)
+  def validJsonFormat(jsonString: String): Boolean = {
+    !parseJsonString(jsonString).isEmpty
   }
   
-  def test(test: String): Boolean = {
+  def validateJsonString(jsonString: String, schemaString: String): Unit = {
     
+    val schemaObj = parseJsonString(schemaString)
+    val jsonObj =  parseJsonString(jsonString)
     
-    val testString = """{
-    "action": "uploadSchema",
-    "id": "config-schema",
-    "status": "success"
-    }"""
-    
-    var jsonObj: Option[JsonNode] = None
-    
-    try {
-      jsonObj = parseJsonString(testString) 
-      true
-    
-    } catch {
-      case e: Exception => {
-        println(e)
-        false
-      }
-    }    
-    
-    
-  }
-
-//  def isJsonNode(x: Any): Boolean = x match {
-//    case j: JsonNode => true
-//    case _ => false
-//  }
-  
-  def validJsonString(jsonString: String): Boolean = {
-    parseJsonString(jsonString) != None
-  }
-  
-  def validateJsonString(): Boolean = {
-    true
-  }
-  
-  def validateSchema(): Boolean = {
-    true
-  }
-  
-  def parseJsonString(data: String): Option[JsonNode] = {
-    try {
-      Some(mapper.readTree(data))  
-    } catch {
-      case e: Exception => None
+    if (!schemaObj.isEmpty && !jsonObj.isEmpty) {
+      val schema =  jsonSchemaFactory.getJsonSchema(schemaObj.get)
+      val report = schema.validate(jsonObj.get)
+      println(report)
+      
+      if(report.isSuccess) {
+        jsonObj.get
+      } else {
+        createResponseJson("1", "2", "3")
+      } 
+    } else {
+      createResponseJson("1", "2", "3")
     }
   }
 }
