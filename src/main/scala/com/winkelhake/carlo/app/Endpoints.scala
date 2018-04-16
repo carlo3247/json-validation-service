@@ -18,7 +18,7 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
 
   // Download a JSON Schema with unique `SCHEMAID`
   get("/schema/:id") {
-    getSchema(params("id")).getOrElse(createResponseJson("1", "2", "3"))
+    getSchema(params("id")).getOrElse(createResponseJson("downloadSchema", params("id"), "error", "schema not found"))
   }
   
   // Upload a JSON Schema with unique `SCHEMAID`
@@ -27,9 +27,9 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
     val jsonString = request.body
     if (validJsonFormat(jsonString)) {
       saveSchema(params("id"), jsonString) 
-      createResponseJson("1", "2", "3")
+      createResponseJson("uploadSchema", params("id"), "success")
     } else {
-      createResponseJson("1", "2", "3")
+      createResponseJson("uploadSchema", params("id"), "error", "Invalid JSON")
     }
   }
   
@@ -37,7 +37,7 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   post("/validate/:id") {
     val schemaString = getSchema(params("id"))
     if (!schemaString.isEmpty) {
-      validateJsonString(request.body, schemaString.get)
+      validateJsonString(params("id"), request.body, schemaString.get)
     } else {
       createResponseJson("1", "2", "3")
     }

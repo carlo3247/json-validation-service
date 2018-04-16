@@ -13,7 +13,7 @@ object JsonValidator {
     !parseJsonString(jsonString).isEmpty
   }
   
-  def validateJsonString(jsonString: String, schemaString: String): Unit = {
+  def validateJsonString(id: String, jsonString: String, schemaString: String): JsonNode = {
     
     val schemaObj = parseJsonString(schemaString)
     val jsonObj =  parseJsonString(jsonString)

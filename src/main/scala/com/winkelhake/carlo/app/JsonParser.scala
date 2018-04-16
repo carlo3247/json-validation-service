@@ -18,13 +18,14 @@ object JsonParser {
   
   def createResponseJson(action: String, id: String, status: String, message: String = ""): JsonNode = {
     
-    val responseMap = Map(
-      "action" -> action,
-      "id" -> id,
-      "status" -> status,
-      "message" -> message
-    ) 
+    var responseString: String = "{ \"action\" : \"" + action+"\", \"id\" : \"" + id+"\", \"status\" : \"" + status+"\""
+
+    if (message != "") {
+      responseString += ", \"message\" : \"" + message+"\"}"
+    } else {
+      responseString += "}"
+    }
     
-    mapper.valueToTree(responseMap)
+    mapper.readTree(responseString)
   }
 }
