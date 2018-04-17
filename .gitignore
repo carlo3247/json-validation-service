@@ -69,4 +69,4 @@ jrebel.lic
 /.lib/
 
 # ignore saved schemas
-#src/main/resources/schemas/*
+src/main/resources/schemas/*
