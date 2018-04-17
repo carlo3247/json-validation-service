@@ -36,10 +36,6 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   // Validate a JSON document against the JSON Schema identified by `SCHEMAID`
   post("/validate/:id") {
     val schemaString = getSchema(params("id"))
-    if (!schemaString.isEmpty) {
-      validateJsonString(params("id"), request.body, schemaString.get)
-    } else {
-      createResponseJson("1", "2", "3")
-    }
+    validateJsonString(params("id"), request.body, schemaString.get)
   }
 }

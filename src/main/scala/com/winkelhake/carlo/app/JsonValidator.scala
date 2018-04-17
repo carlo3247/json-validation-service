@@ -21,15 +21,21 @@ object JsonValidator {
     if (!schemaObj.isEmpty && !jsonObj.isEmpty) {
       val schema =  jsonSchemaFactory.getJsonSchema(schemaObj.get)
       val report = schema.validate(jsonObj.get)
-      println(report)
-      
+
+      var reportString = report.toString.replace("\n", "\\n")
+      reportString = reportString.replace("\"", "\\\"")
+
       if(report.isSuccess) {
-        jsonObj.get
+        createResponseJson("validateDocument", id, "success")
       } else {
-        createResponseJson("1", "2", "3")
+        createResponseJson("validateDocument", id, "error", reportString)
       } 
     } else {
-      createResponseJson("1", "2", "3")
+      if (jsonObj.isEmpty) {
+        createResponseJson("validateDocument", id, "error", "The submitted JSON could not be parsed correctly.")
+      } else {
+        createResponseJson("validateDocument", id, "error", "The schema to compare with contains errors.")
+      }
     }
   }
 }

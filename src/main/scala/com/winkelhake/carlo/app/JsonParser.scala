@@ -10,7 +10,7 @@ object JsonParser {
   
   def parseJsonString(data: String): Option[JsonNode] = {
     try {
-      Some(mapper.readTree(data))  
+      Some(mapper.readTree(data))
     } catch {
       case e: Exception => None
     }
