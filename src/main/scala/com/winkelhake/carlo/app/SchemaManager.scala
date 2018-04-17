@@ -19,7 +19,7 @@ object SchemaManager {
   
   def getSchema(id: String): Option[String] = {
     try {
-      Some(mapper.readValue(new File(PATH + id + ".json"), classOf[String]))
+      Some(mapper.readValue(new File(System.getProperty("user.dir") + PATH + id + ".json"), classOf[String]))
     } catch {
       case e: Exception => None
     }
