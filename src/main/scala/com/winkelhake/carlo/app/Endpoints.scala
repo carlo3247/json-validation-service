@@ -26,8 +26,12 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   post("/schema/:id") {
     val jsonString = request.body
     if (validJsonFormat(jsonString)) {
-      saveSchema(params("id"), jsonString) 
-      createResponseJson("uploadSchema", params("id"), "success")
+      val successfulSave = saveSchema(params("id"), jsonString)
+      if (successfulSave) {
+        createResponseJson("uploadSchema", params("id"), "success")
+      } else {
+        createResponseJson("uploadSchema", params("id"), "error", "Error writing to file")
+      }
     } else {
       createResponseJson("uploadSchema", params("id"), "error", "Invalid JSON")
     }

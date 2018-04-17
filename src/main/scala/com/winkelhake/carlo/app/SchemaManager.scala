@@ -5,14 +5,15 @@ import java.io._
 
 object SchemaManager {  
   
-  private val PATH = "src/main/resources/schemas/"
+  private val PATH = "/src/main/resources/schemas/"
   private lazy val mapper = new ObjectMapper()
 
-  def saveSchema(id: String, jsonString: String) = {
+  def saveSchema(id: String, jsonString: String): Boolean = {
     try {
-      mapper.writeValue(new File(PATH + id + ".json"), jsonString)
+      mapper.writeValue(new File(System.getProperty("user.dir") + PATH + id + ".json"), jsonString)
+      true
     } catch {
-      case e: Exception => println(e)
+      case e: Exception => {println(e); false}
     } 
   }
   

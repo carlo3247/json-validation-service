@@ -1,9 +1,9 @@
-# json-schema-api #
+# json-validation-service #
 
 ## Build & Run ##
 
 ```sh
-$ cd json_schema_api
+$ cd json-validation-service
 $ sbt
 > jetty:start
 ```
