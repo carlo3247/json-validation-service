@@ -13,7 +13,7 @@ object SchemaManager {
       mapper.writeValue(new File(System.getProperty("user.dir") + PATH + id + ".json"), jsonString)
       true
     } catch {
-      case e: Exception => {println(e); false}
+      case e: Exception => false
     } 
   }
   

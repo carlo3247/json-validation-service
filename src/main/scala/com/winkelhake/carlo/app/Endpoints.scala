@@ -3,6 +3,10 @@ package com.winkelhake.carlo.app
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.scalatra.ScalatraServlet
+import org.scalatra.Created
+import org.scalatra.BadRequest
+import org.scalatra.InternalServerError
+import org.scalatra.Ok
 import JsonValidator._
 import SchemaManager._
 import JsonParser._
@@ -15,10 +19,15 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
    before() {
     contentType = formats("json")
   }
-
+  
   // Download a JSON Schema with unique `SCHEMAID`
   get("/schema/:id") {
-    getSchema(params("id")).getOrElse(createResponseJson("downloadSchema", params("id"), "error", "schema not found"))
+    val schemaObj = getSchema(params("id"))
+    if (!schemaObj.isEmpty) {
+      schemaObj.get
+    } else {
+      BadRequest(createResponseJson("downloadSchema", params("id"), "error", "schema not found"))
+    }
   }
   
   // Upload a JSON Schema with unique `SCHEMAID`
@@ -28,12 +37,12 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
     if (validJsonFormat(jsonString)) {
       val successfulSave = saveSchema(params("id"), jsonString)
       if (successfulSave) {
-        createResponseJson("uploadSchema", params("id"), "success")
+        Created(createResponseJson("uploadSchema", params("id"), "success"))
       } else {
-        createResponseJson("uploadSchema", params("id"), "error", "Error writing to file")
+        InternalServerError(createResponseJson("uploadSchema", params("id"), "error", "Error writing to file"))
       }
     } else {
-      createResponseJson("uploadSchema", params("id"), "error", "Invalid JSON")
+      BadRequest(createResponseJson("uploadSchema", params("id"), "error", "Invalid JSON"))
     }
   }
   
@@ -41,13 +50,18 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   post("/validate/:id") {
     val schemaString = getSchema(params("id"))
     if (!schemaString.isEmpty) {
-      validateJsonString(params("id"), request.body, schemaString.get)
+      val validationResult = validateJsonString(params("id"), request.body, schemaString.get)
+      if (validationResult._1) {
+        createResponseJson("validateDocument", params("id"), "success")
+      } else {
+        BadRequest(createResponseJson("validateDocument", params("id"), "error", validationResult._2))
+      }
     } else {
-      createResponseJson("validateDocument", params("id"), "error", "schema not found")
+      BadRequest(createResponseJson("validateDocument", params("id"), "error", "schema not found"))
     }
   }
   
   notFound {
-    halt(404, "")   
+    halt(404, "")
   }
 }
