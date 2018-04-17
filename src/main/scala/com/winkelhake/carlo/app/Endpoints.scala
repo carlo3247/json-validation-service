@@ -2,7 +2,7 @@ package com.winkelhake.carlo.app
 
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
-import org.scalatra._
+import org.scalatra.ScalatraServlet
 import JsonValidator._
 import SchemaManager._
 import JsonParser._
@@ -24,9 +24,7 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
   // Upload a JSON Schema with unique `SCHEMAID`
   // Does not check for existing schema
   post("/schema/:id") {
-    println("here\n\n\n")
     val jsonString = request.body
-    println(jsonString)
     if (validJsonFormat(jsonString)) {
       saveSchema(params("id"), jsonString) 
       createResponseJson("uploadSchema", params("id"), "success")
@@ -43,5 +41,9 @@ class Endpoints extends ScalatraServlet with JacksonJsonSupport {
     } else {
       createResponseJson("validateDocument", params("id"), "error", "schema not found")
     }
+  }
+  
+  notFound {
+    halt(404, "")   
   }
 }

@@ -8,6 +8,7 @@ import java.util.Map.Entry
 import collection.JavaConverters._
 
 /*
+ * mapper.setSerializationInclusion(Include.NON_NULL)
  * Serialization including NON_NULL not working because of a direct conversion to Json Node
  */
 
@@ -16,14 +17,8 @@ object JsonParser {
   private lazy val mapper = new ObjectMapper()
   
   def parseJsonString(data: String): Option[JsonNode] = {
-
-//    mapper.setSerializationInclusion(Include.NON_NULL)
-
+    
     try {
-//      val x = Some(mapper.readTree(data))
-//      cleanJsonNode(x.get)
-//      println("-\n" + x.get + "\n-")
-//      x
       Some(mapper.readTree(data))
     } catch {
       case e: Exception => None
@@ -43,20 +38,20 @@ object JsonParser {
     mapper.readTree(responseString)
   }
   
-  private def cleanJsonNode(node: JsonNode): Unit = {
-
-    val iterator: Iterator[Entry[String, JsonNode]] = node.fields().asScala
-    
-    while(iterator.hasNext) {
-      val entry: Entry[String, JsonNode] = iterator.next()
-      println(s"${entry.getKey}=${entry.getValue} ofType: ${entry.getValue.getClass}")
-      if(entry.getValue.isNull) {
-        println(s"IS NULL: ${entry.getKey}=${entry.getValue}")
-//        println(node.asInstanceOf[ObjectNode].remove(entry.getKey))
-//        x.remove(entry.getKey)
-      } else {
-        cleanJsonNode(entry.getValue)
-      }
-    }
-  }
+//  private def cleanJsonNode(node: JsonNode): Unit = {
+//
+//    val iterator: Iterator[Entry[String, JsonNode]] = node.fields().asScala
+//    
+//    while(iterator.hasNext) {
+//      val entry: Entry[String, JsonNode] = iterator.next()
+//      println(s"${entry.getKey}=${entry.getValue} ofType: ${entry.getValue.getClass}")
+//      if(entry.getValue.isNull) {
+//        println(s"IS NULL: ${entry.getKey}=${entry.getValue}")
+////        println(node.asInstanceOf[ObjectNode].remove(entry.getKey))
+////        x.remove(entry.getKey)
+//      } else {
+//        cleanJsonNode(entry.getValue)
+//      }
+//    }
+//  }
 }

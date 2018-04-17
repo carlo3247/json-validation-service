@@ -22,12 +22,11 @@ object JsonValidator {
       val schema =  jsonSchemaFactory.getJsonSchema(schemaObj.get)
       val report = schema.validate(jsonObj.get)
 
-      var reportString = report.toString.replace("\n", "\\n")
-      reportString = reportString.replace("\"", "\\\"")
-
       if(report.isSuccess) {
         createResponseJson("validateDocument", id, "success")
       } else {
+        var reportString = report.toString.replace("\n", "\\n")
+        reportString = reportString.replace("\"", "\\\"")
         createResponseJson("validateDocument", id, "error", reportString)
       } 
     } else {
